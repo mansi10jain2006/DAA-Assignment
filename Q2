@@ -1,0 +1,37 @@
+def find(x, parent):
+    if parent[x] != x:
+        parent[x] = find(parent[x], parent)  # Path compression
+    return parent[x]
+
+def union(x, y, parent, size):
+    root_x = find(x, parent)
+    root_y = find(y, parent)
+    if root_x != root_y:
+        if size[root_x] < size[root_y]:
+            parent[root_x] = root_y
+            size[root_y] += size[root_x]
+        else:
+            parent[root_y] = root_x
+            size[root_x] += size[root_y]
+
+def makeConnected(n, edges):
+    m = len(edges)
+    if m < n - 1:  # not enough edges
+        return -1
+    
+    parent = [i for i in range(n)]
+    size = [1] * n
+
+    # Union all edges
+    for u, v in edges:
+        union(u, v, parent, size)
+
+    # Count unique components
+    components = set(find(i, parent) for i in range(n))
+    return len(components) - 1
+
+
+# Example Run
+n = 9
+edges = [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [4, 5], [5, 6], [7, 8]]
+print("Minimum operations:", makeConnected(n, edges))
