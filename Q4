@@ -1,0 +1,44 @@
+def find_bridges(n, connections):
+    graph = [[] for _ in range(n)]
+    for u, v in connections:
+        graph[u].append(v)
+        graph[v].append(u)
+
+    time = 0
+    visited = [False] * n
+    tin = [0] * n
+    low = [0] * n
+    bridges = []
+
+    def dfs(u, parent):
+        nonlocal time
+        visited[u] = True
+        time += 1
+        tin[u] = low[u] = time
+
+        for v in graph[u]:
+            if v == parent:
+                continue
+            if not visited[v]:
+                dfs(v, u)
+                low[u] = min(low[u], low[v])
+                if low[v] > tin[u]:
+                    bridges.append([u, v])
+            else:
+                low[u] = min(low[u], tin[v])
+
+    for i in range(n):
+        if not visited[i]:
+            dfs(i, -1)
+
+    return bridges
+
+
+# Example
+n = 13
+connections = [
+    [1, 2], [1, 4], [4, 3], [4, 5], [5, 6], [6, 7],
+    [6, 9], [7, 8], [8, 9], [8, 10], [10, 11], [10, 12]
+]
+
+print(find_bridges(n, connections))
