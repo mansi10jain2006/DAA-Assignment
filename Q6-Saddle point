@@ -1,0 +1,18 @@
+def saddle_point(matrix):
+    n = len(matrix)
+    m = len(matrix[0])
+    for i in range(n):
+        row_min = min(matrix[i])
+        col_index = matrix[i].index(row_min)
+        col_max = max(matrix[r][col_index] for r in range(n))
+        if row_min == col_max:
+            return (i, col_index, row_min)
+    return None
+
+# Example
+mat = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+print("Saddle point:", saddle_point(mat))
